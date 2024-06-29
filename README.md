@@ -6,8 +6,8 @@
 
 ### run the server
 ```
-go build
-./echo_server &
+go build -o server server/main.go
+./server/main
 ```
 
 ### access the server via telnet
@@ -17,19 +17,14 @@ telnet localhost 8080
 
 ### to quit telnet
 ```
-Ctrl + ]
+Ctrl + ] and press enter
 then type quit and press enter
 ```
 
-
-### see the process running
+### run client to test simultaneous connections to the server
 ```
-ps ax | grep echo_server
-```
-
-### kill the process
-```
-kill echo_server
+go build -o client client/main.go
+./client/main
 ```
 
 ### GCP deployment
@@ -40,10 +35,10 @@ gcloud compute firewall-rules create rule-allow-tcp-8080 --source-ranges 0.0.0.0
 ```
 - Add the firewall rule to the VM
 ```
-gcloud compute instances add-tags CHANGE_ME_TO_VM_NAME  --tags allow-tcp-8080
+gcloud compute instances add-tags <vm name>  --tags allow-tcp-8080
 ```
 - ssh into the VM and build/run the server
 - access the server via telnet
 ```
-telnet CHANGE_ME_TO_VM_IP 8080
+telnet <vm ip> 8080
 ```
