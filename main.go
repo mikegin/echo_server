@@ -2,43 +2,53 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net"
-	"os"
 )
 
 const (
-	HOST = "localhost"
+	HOST = "0.0.0.0"
 	PORT = "8080"
 	TYPE = "tcp"
 )
 
 func main() {
-	fmt.Println("Hello, World!")
+	fmt.Println("Starting Echo Server...")
 	listen, err := net.Listen(TYPE, HOST+":"+PORT)
 	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
+		log.Fatalf("Error starting server: %s", err)
 	}
 	defer listen.Close()
+	fmt.Println("Server listening on", HOST+":"+PORT)
+
 	for {
 		conn, err := listen.Accept()
 		if err != nil {
-			log.Fatal(err)
-			os.Exit(1)
+			log.Printf("Error accepting connection: %s", err)
+			continue
 		}
 		go handleRequest(conn)
 	}
 }
 
 func handleRequest(conn net.Conn) {
+	defer conn.Close()
 	buffer := make([]byte, 1024)
-	_, err := conn.Read(buffer)
-	if err != nil {
-		log.Fatal(err)
+
+	for {
+		n, err := conn.Read(buffer)
+		if err != nil {
+			if err != io.EOF {
+				log.Printf("Error reading from connection: %s", err)
+			}
+			break
+		}
+
+		_, err = conn.Write(buffer[:n])
+		if err != nil {
+			log.Printf("Error writing to connection: %s", err)
+			break
+		}
 	}
-
-	conn.Write(buffer)
-
-	conn.Close()
 }
