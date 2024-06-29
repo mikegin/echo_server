@@ -2,11 +2,11 @@ import socket
 import threading
 
 # Define the server address and port
-# SERVER_ADDRESS = '127.0.0.1'
+SERVER_ADDRESS = '127.0.0.1'
 # SERVER_ADDRESS = '8.tcp.ngrok.io'
-SERVER_ADDRESS = '3.142.129.56'
-# SERVER_PORT = 8080
-SERVER_PORT = 16648
+# SERVER_ADDRESS = '3.142.129.56'
+SERVER_PORT = 8080
+# SERVER_PORT = 16648
 NUM_CONNECTIONS = 5
 
 # Function to handle each client connection
